@@ -1,25 +1,35 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Bullet(pygame.sprite.Sprite):
 
-    def __init__(self, screen, gun):
-        """ Позиция появления пули """
+class Bullet(Sprite):
+    """A class to manage bullets fired from the ship."""
+
+    def __init__(self, ai_settings, screen, ship):
+        """Create a bullet object, at the ship's current position."""
         super(Bullet, self).__init__()
         self.screen = screen
-        self.rect = pygame.Rect(0, 0, 2, 12)
-        self.color = 139, 195, 74
-        self.speed = 4.5
-        self.rect.centerx = gun.rect.centerx
-        self.rect.top  = gun.rect.top
+
+        # Create bullet rect at (0, 0), then set correct position.
+        self.rect = pygame.Rect(
+            0, 0, ai_settings.bullet_width, ai_settings.bullet_height
+        )
+        self.rect.centerx = ship.rect.centerx
+        self.rect.top = ship.rect.top
+
+        # Store a decimal value for the bullet's position.
         self.y = float(self.rect.y)
 
+        self.color = ai_settings.bullet_color
+        self.speed_factor = ai_settings.bullet_speed_factor
+
     def update(self):
-        """ Движение пули вверх """
-        self.y -= self.speed
+        """Move the bullet up the screen."""
+        # Update the decimal position of the bullet.
+        self.y -= self.speed_factor
+        # Update the rect position.
         self.rect.y = self.y
 
     def draw_bullet(self):
-        """ пуля на экране """
-        pygame.draw.rect(self.screen, self.rect, self.color.)
-
-
+        """Draw the bullet to the screen."""
+        pygame.draw.rect(self.screen, self.color, self.rect)
